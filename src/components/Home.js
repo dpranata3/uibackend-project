@@ -101,14 +101,14 @@ class Home extends Component {
             onDoubleClick={() => {
               this.onDouble(task._id, this.props.id);
             }}
-            className="list-group-item d-flex justify-content-between row-hl"
+            className="bg-secondary list-group-item d-flex justify-content-between row-hl"
             key={task._id}
           >
-            <span className="item-hl font-weight-bold">{task.description}</span>
+            <span className="item-hl font-weight-bold text-white">{task.description}</span>
   
             <span className="item-hl">
               <button
-                className="btn btn-outline-primary"
+                className="btn btn-warning"
                 onClick={() => {
                   this.unDoneTask(task._id, this.props.id);
                 }}
@@ -147,7 +147,7 @@ class Home extends Component {
             className="btn btn-block btn-primary mt-3"
             onClick={() => this.addTask(this.props.id)}
           >
-            Up !
+           Add New Task
           </button>
         </div>
       );
