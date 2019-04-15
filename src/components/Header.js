@@ -1,18 +1,21 @@
 import React, { Component } from 'react'
 import {Link} from 'react-router-dom'
+import {connect} from 'react-redux'
 import {
     Button,
     Collapse,
-    //DropdownToggle,
-    //DropdownMenu,
-    //DropdownItem,
-    //NavbarBrand,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+    NavbarBrand,
     Navbar,
     NavbarToggler, 
     Nav,
     NavItem,
-    //UncontrolledDropdown
+    UncontrolledDropdown
     } from 'reactstrap';
+
+import {onLogout} from '../actions'
 
 class Header extends Component {
     constructor(props) {
@@ -30,23 +33,59 @@ class Header extends Component {
         }));
       }
     render() {
-        return (
+        const {user} = this.props
+        if(user.name === ''){
+            return ( // register, login
+                <div>
+                    <Navbar color="light" light expand="md">
+                        <div className="container">
+                            <Link className="navbar-brand" to="/">ReactMongoose</Link>
+                            <NavbarToggler onClick={this.toggle} />
+                            <Collapse isOpen={this.state.isOpen} navbar>
+                                <Nav className="ml-auto" navbar>
+                                    <NavItem>
+                                        <Link className="nav-link" to="/">Tasks</Link>
+                                    </NavItem>
+                                    <NavItem>
+                                        <Link to="/register"><Button className="mx-3" color="primary">Register</Button></Link>
+                                    </NavItem>
+                                    <NavItem>
+                                        <Link to="/login"><Button color="success">Login</Button></Link>
+                                    </NavItem>
+                                </Nav>
+                            </Collapse>
+                        </div>
+                    </Navbar>
+                </div>
+            )
+        } 
+
+        return(
             <div>
                 <Navbar color="light" light expand="md">
                     <div className="container">
-                        <Link className="navbar-brand" to="/">ReactMongoose</Link>
+                        <NavbarBrand href="/">ReactMongoose</NavbarBrand>
                         <NavbarToggler onClick={this.toggle} />
                         <Collapse isOpen={this.state.isOpen} navbar>
                             <Nav className="ml-auto" navbar>
                                 <NavItem>
                                     <Link className="nav-link" to="/">Tasks</Link>
                                 </NavItem>
-                                <NavItem>
-                                    <Link to="/register"><Button className="mx-3" color="primary">Register</Button></Link>
-                                </NavItem>
-                                <NavItem>
-                                    <Link to="/login"><Button color="success">Login</Button></Link>
-                                </NavItem>
+                                <UncontrolledDropdown nav inNavbar>
+                                    <DropdownToggle nav caret>
+                                        Hallo {user.name}
+                                    </DropdownToggle>
+                                    <DropdownMenu right>
+                                    <Link className="dropdown-item" to="/profile">
+                                        <DropdownItem>Profile</DropdownItem>
+                                    </Link>
+                                    <DropdownItem divider />
+                                    <Button className="dropdown-item" onClick={this.props.onLogout}>
+                                        Log out
+                                    </Button>
+                                    
+                                    </DropdownMenu>
+                                </UncontrolledDropdown>
                             </Nav>
                         </Collapse>
                     </div>
@@ -56,4 +95,8 @@ class Header extends Component {
     }
 }
 
-export default Header;
+const mapStateToProps = state => {
+    return {user: state.auth}
+}
+
+export default connect(mapStateToProps,{onLogout})(Header)
